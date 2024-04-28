@@ -1,0 +1,6 @@
+*.swp
+*.swo
+
+.terraform*
+plan.out
+

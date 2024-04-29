@@ -7,16 +7,12 @@ resource "aws_s3_bucket" "alb_log" {
   }
 }
 
-resource "aws_s3_bucket_policy" "allow_access_from_alb" {
-  bucket = aws_s3_bucket.alb_log.id
-  policy = data.aws_iam_policy_document.allow_access_from_alb.json
-}
-
 data "aws_iam_policy_document" "allow_access_from_alb" {
   statement {
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::054676820928:root"]
+      #identifiers = ["arn:aws:iam::054676820928:root"]
+      identifiers = ["${var.principal_identifier}"]
     }
 
     actions = [
@@ -28,6 +24,15 @@ data "aws_iam_policy_document" "allow_access_from_alb" {
       "${aws_s3_bucket.alb_log.arn}/*",
     ]
   }
+}
+
+resource "aws_s3_bucket_policy" "allow_access_from_alb" {
+  bucket = aws_s3_bucket.alb_log.id
+  policy = data.aws_iam_policy_document.allow_access_from_alb.json
+}
+
+variable "principal_identifier" {
+    type = string
 }
 
 output "kodera_alb_log_id" {

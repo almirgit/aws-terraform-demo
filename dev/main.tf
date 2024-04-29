@@ -10,6 +10,7 @@ variable "private_data_subnet_az1_cidr" {}
 variable "private_data_subnet_az2_cidr" {}
 variable "test_site_url" {}
 variable "certificate_arn" {}
+variable "principal_identifier" {}
 
 
 # Configure AWS provider
@@ -21,6 +22,7 @@ provider "aws" {
 # Create S3 bucket for logs
 module "s3_log" {
     source = "../modules/s3"
+    principal_identifier = var.principal_identifier
 }
 
 # Route 53
@@ -84,6 +86,7 @@ module "alb1" {
     s3_log_id              = module.s3_log.kodera_alb_log_id
     vpc_id                 = module.vpc1.vpc_id
     worker_ec2_instances   = module.ec2_workers.ec2_ubuntu_box_instances
+    test_site_url          = var.test_site_url
     certificate_arn        = var.certificate_arn
     route53_zone_id        = module.route53.koderacloud_net_zone_id
 }

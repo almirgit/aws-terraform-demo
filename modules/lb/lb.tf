@@ -58,7 +58,7 @@ resource "aws_lb_listener" "front_end" {
 
 resource "aws_route53_record" "www" {
   zone_id = var.route53_zone_id
-  name    = "test.koderacloud.net"
+  name    = var.test_site_url
   type    = "A"
 
   alias {
@@ -88,3 +88,11 @@ variable "certificate_arn" {
 variable "route53_zone_id" {
     type = string
 }
+
+variable "test_site_url" {
+  type = string
+}
+
+output "alb_arn" {
+    value = aws_lb.alb.arn
+} 

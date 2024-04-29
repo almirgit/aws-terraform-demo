@@ -8,7 +8,7 @@ git clone git@github.com:almirgit/aws-terraform-demo.git
 
 ## Config
 
-Config parameters are inside of ***terraform.tfvars*** except parameter "certificate_arn" which can be stored in *** .secret.auto.tfvars ***
+Config parameters are inside of ***terraform.tfvars*** except parameter "certificate_arn" which can be stored in ***.secret.auto.tfvars***
 
 ## Run
 

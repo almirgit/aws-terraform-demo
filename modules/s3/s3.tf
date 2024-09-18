@@ -7,12 +7,15 @@ resource "aws_s3_bucket" "alb_log" {
   }
 }
 
+data "aws_elb_service_account" "main" {}
+
 data "aws_iam_policy_document" "allow_access_from_alb" {
   statement {
+    effect = "Allow"
+
     principals {
       type        = "AWS"
-      #identifiers = ["arn:aws:iam::054676820928:root"]
-      identifiers = ["${var.principal_identifier}"]
+      identifiers = [data.aws_elb_service_account.main.arn] # Needs to be per region predefined AWS account
     }
 
     actions = [
@@ -26,14 +29,19 @@ data "aws_iam_policy_document" "allow_access_from_alb" {
   }
 }
 
+
 resource "aws_s3_bucket_policy" "allow_access_from_alb" {
-  bucket = aws_s3_bucket.alb_log.id
+  bucket = aws_s3_bucket.alb_log.bucket
   policy = data.aws_iam_policy_document.allow_access_from_alb.json
 }
 
 variable "principal_identifier" {
     type = string
 }
+
+#variable "trusted_role_arn" {
+#    type = string
+#}
 
 output "kodera_alb_log_id" {
     value = aws_s3_bucket.alb_log.id

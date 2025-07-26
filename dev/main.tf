@@ -19,13 +19,13 @@ provider "aws" {
     profile = var.aws_profile
 }
 
-## Create S3 bucket for logs
-#module "s3_log" {
-#    source = "../modules/s3"
-#    principal_identifier = var.principal_identifier
-#    #trusted_role_arn = module.alb1.alb_arn
-#}
-#
+# Create S3 bucket for logs
+module "s3_log" {
+   source = "../modules/s3"
+   principal_identifier = var.principal_identifier
+   #trusted_role_arn = module.alb1.alb_arn
+}
+
 ## Route 53
 #module "route53" {
 #    source   = "../modules/route53"

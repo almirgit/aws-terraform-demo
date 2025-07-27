@@ -12,13 +12,13 @@ resource "aws_route53_record" "default" {
     records = ["116.203.233.203"]  
 }
 
-# resource "aws_route53_record" "test" {
-#     zone_id = data.aws_route53_zone.hosted_zone.zone_id
-#     name    = "test.koderacloud.net"
-#     type    = "CNAME"
-#     ttl     = 300
-#     records = ["koderacloud.net"]  
-# }
+resource "aws_route53_record" "test" {
+    zone_id = data.aws_route53_zone.hosted_zone.zone_id
+    name    = "test.koderacloud.net"
+    type    = "CNAME"
+    ttl     = 300
+    records = ["koderacloud.net"]  
+}
 
 variable "domain_name" {
     default     = "koderacloud.net"

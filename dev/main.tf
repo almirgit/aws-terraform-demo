@@ -26,13 +26,13 @@ module "s3_log" {
    #trusted_role_arn = module.alb1.alb_arn
 }
 
-## Route 53
-#module "route53" {
-#    source   = "../modules/route53"
-#    test_site_url = var.test_site_url
-#}
-#
-#
+# Route 53
+module "route53" {
+   source   = "../modules/route53"
+   test_site_url = var.test_site_url
+}
+
+
 ## Create VPC
 #module "vpc1" {
 #    source = "../modules/vpc"

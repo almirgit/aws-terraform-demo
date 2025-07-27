@@ -2,6 +2,7 @@ region                          = "eu-central-1"
 aws_profile                     = "default"
 project_name                    = "demo2024"
 vpc_cidr                        = "10.4.0.0/16"
+key_pair                        = "almir-id-rsa"
 
 public_subnet_az1_cidr          = "10.4.1.0/24"
 public_subnet_az2_cidr          = "10.4.2.0/24"

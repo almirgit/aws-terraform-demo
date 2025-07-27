@@ -140,3 +140,47 @@ variable "cidr_from_anywhere_ipv6" {}
 output "allow_ssh_sg_id" {
     value = aws_security_group.allow_ssh.id
 }
+
+
+
+
+
+
+variable "vpc_cidr" {}
+
+# For NAT instance 
+resource "aws_security_group" "allow_http_nat" {
+  name        = "allow_http_nat"
+  description = "Allow HTTP inbound traffic and all outbound traffic"
+  vpc_id      = var.vpc_id
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  tags = {
+    Name = "allow_http_nat"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "allow_http_ipv4_nat" {
+  security_group_id = aws_security_group.allow_http.id
+  #cidr_ipv4         = var.cidr_from_anywhere_ipv4
+  cidr_ipv4         = var.vpc_cidr
+  from_port         = 80
+  ip_protocol       = "tcp"
+  to_port           = 80
+}
+
+# Still not sure how to handle ipv6 address space 
+# resource "aws_vpc_security_group_ingress_rule" "allow_http_ipv6_nat" {
+#   security_group_id = aws_security_group.allow_http.id
+#   cidr_ipv6         = var.cidr_from_anywhere_ipv6
+#   from_port         = 80
+#   ip_protocol       = "tcp"
+#   to_port           = 80
+# }

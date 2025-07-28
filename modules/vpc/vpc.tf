@@ -6,6 +6,7 @@ resource "aws_vpc" "vpc" {
 
   tags      = {
     Name    = "${var.project_name}-vpc"
+    Project = "${var.project_name}"
   }
 }
 
@@ -15,6 +16,7 @@ resource "aws_internet_gateway" "internet_gateway" {
 
   tags      = {
     Name    = "${var.project_name}-igw"
+    Project = "${var.project_name}"
   }
 }
 

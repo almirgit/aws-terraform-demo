@@ -1,9 +1,23 @@
+variable "project_name" {
+  type = string
+}
+
+variable "principal_identifier" {
+    type = string
+}
+
+#variable "trusted_role_arn" {
+#    type = string
+#}
+
+
 resource "aws_s3_bucket" "alb_log" {
   bucket = "kodera-alb-log"
 
   tags = {
     #Name        = "My bucket"
-    Environment = "dev"
+    #Environment = "dev"
+    Project = var.project_name
   }
 }
 
@@ -35,13 +49,6 @@ resource "aws_s3_bucket_policy" "allow_access_from_alb" {
   policy = data.aws_iam_policy_document.allow_access_from_alb.json
 }
 
-variable "principal_identifier" {
-    type = string
-}
-
-#variable "trusted_role_arn" {
-#    type = string
-#}
 
 output "kodera_alb_log_id" {
     value = aws_s3_bucket.alb_log.id

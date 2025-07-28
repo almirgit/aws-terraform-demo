@@ -1,19 +1,3 @@
-variable "region" {}
-variable "aws_profile" {}
-variable "project_name" {}
-variable "vpc_cidr" {}
-variable "key_pair" {}
-variable "public_subnet_az1_cidr" {}
-variable "public_subnet_az2_cidr" {}
-variable "private_app_subnet_az1_cidr" {}
-variable "private_app_subnet_az2_cidr" {}
-variable "private_data_subnet_az1_cidr" {}
-variable "private_data_subnet_az2_cidr" {}
-variable "test_site_url" {}
-variable "certificate_arn" {}
-variable "principal_identifier" {}
-
-
 # Configure AWS provider
 provider "aws" {
     region  = var.region
@@ -24,6 +8,7 @@ provider "aws" {
 module "s3_log" {
    source = "../modules/s3"
    principal_identifier = var.principal_identifier
+   project_name = var.project_name
    #trusted_role_arn = module.alb1.alb_arn
 }
 
@@ -38,8 +23,7 @@ module "vpc1" {
    source                          = "../modules/vpc"
    region                          = var.region
    project_name                    = var.project_name
-   vpc_cidr                        = var.vpc_cidr
-   #key_pair                        = var.key_pair
+   vpc_cidr                        = var.vpc_cidr   
    public_subnet_az1_cidr          = var.public_subnet_az1_cidr
    public_subnet_az2_cidr          = var.public_subnet_az2_cidr
    private_app_subnet_az1_cidr     = var.private_app_subnet_az1_cidr
@@ -48,20 +32,39 @@ module "vpc1" {
    private_data_subnet_az2_cidr    = var.private_data_subnet_az2_cidr
 }
 
+# Security
+module "security" {
+   source = "../modules/security"
+   project_name = var.project_name
+   vpc_id = module.vpc1.vpc_id
+   vpc_cidr = var.vpc_cidr
+   cidr_from_anywhere_ipv4 = "0.0.0.0/0"
+   cidr_from_anywhere_ipv6 = "::/0"
+}
+
+# # Create NAT instance - Looks like it's not free anymore (2025)
+# module "nat_instance" {
+#    source                          = "../modules/nat_instance"
+#    project_name                    = var.project_name
+#    key_pair                        = var.key_pair
+#    subnet_id                       = module.vpc1.public_subnet_az1_id
+#    vpc_security_group_ids          = [module.security.allow_ssh_sg_id, 
+#                                       module.security.allow_http_https_sg_id]
+# }
+
 # # Create routes
-# module "routes" {
-#    source                          = "../modules/routes"
-# }
+module "routes" {
+   source                          = "../modules/routes"
+   project_name                    = var.project_name
+   vpc_id                          = module.vpc1.vpc_id
+   internet_gateway                = module.vpc1.internet_gateway
+   nat_gateway                     = module.vpc1.nat_gateway
+   public_subnet_az1_id            = module.vpc1.public_subnet_az1_id
+   public_subnet_az2_id            = module.vpc1.public_subnet_az2_id
+   private_app_subnet_az1_id       = module.vpc1.private_app_subnet_az1_id
+   private_app_subnet_az2_id       = module.vpc1.private_app_subnet_az2_id
+}
 
-
-# # Security
-# module "security" {
-#    source = "../modules/security"
-#    vpc_id = module.vpc1.vpc_id
-#    vpc_cidr = var.vpc_cidr
-#    cidr_from_anywhere_ipv4 = "0.0.0.0/0"
-#    cidr_from_anywhere_ipv6 = "::/0"
-# }
 
 #module "ec2_bastion" {
 #    source          = "../modules/ec2"

@@ -52,18 +52,18 @@ module "security" {
 #                                       module.security.allow_http_https_sg_id]
 # }
 
-# # Create routes
-module "routes" {
-   source                          = "../modules/routes"
-   project_name                    = var.project_name
-   vpc_id                          = module.vpc1.vpc_id
-   internet_gateway                = module.vpc1.internet_gateway
-   nat_gateway                     = module.vpc1.nat_gateway
-   public_subnet_az1_id            = module.vpc1.public_subnet_az1_id
-   public_subnet_az2_id            = module.vpc1.public_subnet_az2_id
-   private_app_subnet_az1_id       = module.vpc1.private_app_subnet_az1_id
-   private_app_subnet_az2_id       = module.vpc1.private_app_subnet_az2_id
-}
+# # # Create routes
+# module "routes" {
+#    source                          = "../modules/routes"
+#    project_name                    = var.project_name
+#    vpc_id                          = module.vpc1.vpc_id
+#    internet_gateway                = module.vpc1.internet_gateway
+#    nat_gateway                     = module.vpc1.nat_gateway
+#    public_subnet_az1_id            = module.vpc1.public_subnet_az1_id
+#    public_subnet_az2_id            = module.vpc1.public_subnet_az2_id
+#    private_app_subnet_az1_id       = module.vpc1.private_app_subnet_az1_id
+#    private_app_subnet_az2_id       = module.vpc1.private_app_subnet_az2_id
+# }
 
 
 #module "ec2_bastion" {
